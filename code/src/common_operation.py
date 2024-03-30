@@ -746,9 +746,12 @@ def followed_with_rightclick(game:GameControl):
     game.activate_window()
     time.sleep(0.5)
     followed_img_list = [r'F:\01_game_ctr\lib\img\common\followed1.png', r'F:\01_game_ctr\lib\img\common\not_followed1.png']
-          
-    followed_loc, img_name = game.find_game_multi_img(followed_img_list,part=1,pos1=game.window_pos1,\
-                                                      pos2=game.window_pos2,image_show= False,thread=0.65)
+
+    followed_loc1 = (game.window_pos1[0],game.window_pos1[1])
+    followed_loc2 = (game.window_pos1[0]+40, game.window_pos1[1]+115)
+
+    followed_loc, img_name = game.find_game_multi_img(followed_img_list,part=1,pos1=followed_loc1,\
+                                                      pos2=followed_loc2,image_show= False,thread=0.65)
     if followed_loc != False:
         if img_name == "not_followed1.png":
             print('not followed, right click to follow all player')
@@ -772,9 +775,12 @@ def cancel_followed_with_leftclcik(game:GameControl):
     game.activate_window()
     time.sleep(0.5)
     followed_img_list = [r'F:\01_game_ctr\lib\img\common\followed.png', r'F:\01_game_ctr\lib\img\common\not_followed.png']
-           #                
-    followed_loc, img_name = game.find_game_multi_img(followed_img_list,part=1,pos1=game.window_pos1,\
-                                                      pos2=game.window_pos2,image_show= False,thread=0.65)
+
+    followed_loc1 = (game.window_pos1[0],game.window_pos1[1])
+    followed_loc2 = (game.window_pos1[0]+40, game.window_pos1[1]+115)
+
+    followed_loc, img_name = game.find_game_multi_img(followed_img_list,part=1,pos1=followed_loc1,\
+                                                      pos2=followed_loc2,image_show= False,thread=0.65)
     if followed_loc != False:
         if img_name == "not_followed.png":
             print('not followed, do nothing')
@@ -971,7 +977,9 @@ def pick_up_equipment(game:GameControl):
                        r'F:\01_game_ctr\lib\img\common\zhuangbei_xiezi.png',r'F:\01_game_ctr\lib\img\common\zhuangbei_yaodai.png',
                        r'F:\01_game_ctr\lib\img\common\zhuangbei_yifu.png',r'F:\01_game_ctr\lib\img\common\zhuangbei_yifu1.png',
                        r'F:\01_game_ctr\lib\img\common\zhuangbei_yifu2.png',r'F:\01_game_ctr\lib\img\common\zhuangbei_yifu3.png']
-    maxVal, maxLoc = game.find_multi_img_parallel(pickup_img_list,part=1,pos1=game.window_pos1,pos2=game.window_pos2)
+    pickup_equip_loc1 = (game.window_pos1[0]+390, game.window_pos1[1]+300)
+    pickup_equip_loc2 = (game.window_pos1[0]+1170, game.window_pos1[1]+900)
+    maxVal, maxLoc = game.find_multi_img_parallel(pickup_img_list,part=1,pos1=pickup_equip_loc1,pos2=pickup_equip_loc2)
     if maxVal > 0.65:
         if maxLoc != False:
             if maxLoc != pickup_pre_pos:
@@ -1183,7 +1191,9 @@ def target_function(game_player, player_queue, bone_flag):
     #(519, 459)
     center_pos = (game_player.window_pos1[0]+519, game_player.window_pos1[1]+459)
 
-    #center_pos = (game_player.window_pos1[0]+784, game_player.window_pos1[1]+710)
+    #(296, 60),(410, 144)
+    wood_range_loc1 = (game_player.window_pos1[0]+296, game_player.window_pos1[1]+60)
+    wood_range_loc2 = (game_player.window_pos1[0]+411, game_player.window_pos1[1]+154)
 
     game_player.press_combination_keys(['menu','t']) #switch gear set to JU HUN set
 
@@ -1192,11 +1202,11 @@ def target_function(game_player, player_queue, bone_flag):
         game_player.summon_wait_time = 17 # wait GU ROU JI cd
 
         game_player.press_combination_keys(['control','2'])
-        time.sleep(0.2)
+        time.sleep(0.3)
         game_player.press_combination_keys(['control','3'])
-        time.sleep(0.2)
-        maxLoc, img_name = game_player.find_game_multi_img(wood_img_list,part=1,pos1=game_player.window_pos1,\
-                                            pos2=game_player.window_pos2,thread=0.85)  
+        time.sleep(0.3)
+        maxLoc, img_name = game_player.find_game_multi_img(wood_img_list,part=1,pos1=wood_range_loc1,\
+                                            pos2=wood_range_loc2,thread=0.69,image_show=False)  
         if maxLoc != False:
             gui.moveTo(maxLoc)
             gui.leftClick()
@@ -1207,23 +1217,24 @@ def target_function(game_player, player_queue, bone_flag):
     else:
         if bone_flag:
 
-            game_player.summon_wait_time = 18 # wait GU ROU JI cd
+            game_player.summon_wait_time = 17 # wait GU ROU JI cd
             
-            maxLoc, img_name = game_player.find_game_multi_img(wood_img_list,part=1,pos1=game_player.window_pos1,\
-                                                pos2=game_player.window_pos2,thread=0.85)  
+            maxLoc, img_name = game_player.find_game_multi_img(wood_img_list,part=1,pos1=wood_range_loc1,\
+                                                pos2=wood_range_loc2,thread=0.69)  
             if maxLoc != False:
                 gui.moveTo(maxLoc)
                 gui.leftClick()
                 gui.moveTo(center_pos)
                 game_player.press_single_key_in_background('v')
-                time.sleep(0.2)
+                time.sleep(0.3)
                 game_player.press_combination_keys(['control','1'])
+                time.sleep(0.3)
             else:
                 game_player.press_combination_keys(['control','2'])
-                time.sleep(0.2)
+                time.sleep(0.3)
                 gui.moveTo(center_pos)
                 game_player.press_single_key_in_background('v')
-                time.sleep(0.2)
+                time.sleep(0.3)
                 game_player.press_combination_keys(['control','1'])
         else:
 
